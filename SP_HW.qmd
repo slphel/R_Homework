@@ -1,0 +1,369 @@
+---
+title: "R Assignment"
+subtitle: "by Sarah Phelps"
+date: "March 7, 2024"
+author: "Sarah Phelps"
+root.dir: "/Users/sarahphelps/desktop/BCB546/BCB546/"
+format:
+  html:
+    theme: cosmo 
+    toc: true
+    number-depth: 3
+    html-math-method: katex
+    code-fold: false
+    page-layout: full
+    embed-resources: true     
+    standalone: true
+editor: source
+---
+
+```{r}
+#| label: knitr_setup
+#| warning: false
+#| echo: true
+
+knitr::opts_chunk$set(echo       = TRUE,
+                      warning    = TRUE,
+                      error      = TRUE,
+                      fig.height = 6,
+                      fig.width  = 8
+                      )
+
+
+```
+
+
+```{r}
+# set path
+path_main <- "/Users/sarahphelps/desktop/BCB546/BCB546/"
+
+# load libraries
+library(tidyverse)
+
+# Read in data files
+fang_data <- read.table("fang_et_al_genotypes.txt", header = T, sep = "\t")
+
+snp_data <- read.table("snp_position.txt", header = T, sep = "\t")
+
+```
+
+
+# Data Inspection
+```{r}
+# Fang data
+
+#fang_head <- head(fang_data)
+# We can see there are 986 columns in the Fang genotypes data set
+fang_rows <- nrow(fang_data)
+# there are 2782 rows in this data set
+fang_size <- file.info("fang_et_al_genotypes.txt")
+# file size = 11051939 bytes
+
+# snp_head <- head(snp_data)
+# We can see there are 15 colums in the SNP data set
+snp_rows <- nrow(snp_data)
+# there are 983 rows in this data set
+snp_size <- file.info("snp_position.txt")
+#file size = 82763 bytes
+
+fang_head
+fang_rows
+fang_size 
+
+snp_head
+snp_rows
+snp_size 
+```
+
+
+
+# Data Processing of Fang Data
+```{r}
+# Processing Maize
+
+# filter ZMMIL, ZMMLR, and ZMMMR
+maize_subset <- subset(fang_data, Group %in% c("ZMMIL", "ZMMLR", "ZMMMR"))
+
+# get rid of column 1 and 2
+clean_maize <- select(maize_subset, abph1.20:zmm3.4)
+
+trans_maize <- t(clean_maize)
+
+
+# Processing Teosinte
+
+# filter ZMPBA, ZMPIL, ZMPJA
+teos_subset<- subset(fang_data, Group %in% c("ZMPBA", "ZMPIL", "ZMPJA")) 
+
+# get rid of column 1 and 2
+clean_teos <- select(teos_subset, abph1.20:zmm3.4)
+
+trans_teos <- t(clean_teos)
+
+```
+
+
+# Processing SNP data set
+```{r}
+# create a subset of the 3 necessary columns
+snp_subset <- select(snp_data, SNP_ID, Chromosome, Position)
+
+# combine the columns of the SNP data set and the maize data set
+maize_combine <- cbind(snp_subset, trans_maize) 
+
+# combine the columns of the SNP dataset and the teosinte data set
+teos_combine <- cbind(snp_subset, trans_teos)
+
+```
+
+# Create 10 files for Maize data
+```{r}
+# ascending position order
+ascend_maize <- arrange(maize_combine, Position)
+
+# Filter by chromosome, ascending position order 
+maize1 <- subset(ascend_maize, Chromosome == 1)
+write.csv(maize1, file = "maize1.csv", row.names = TRUE)
+
+maize2 <- subset(ascend_maize, Chromosome == 2)
+write.csv(maize2, file = "maize2.csv", row.names = TRUE)
+
+maize3 <- subset(ascend_maize, Chromosome == 3)
+write.csv(maize3, file = "maize3.csv", row.names = TRUE)
+
+maize4 <- subset(ascend_maize, Chromosome == 4)
+write.csv(maize4, file = "maize4.csv", row.names = TRUE)
+
+maize5 <- subset(ascend_maize, Chromosome == 5)
+write.csv(maize5, file = "maize5.csv", row.names = TRUE)
+
+maize6 <- subset(ascend_maize, Chromosome == 6)
+write.csv(maize6, file = "maize6.csv", row.names = TRUE)
+
+maize7 <- subset(ascend_maize, Chromosome == 7)
+write.csv(maize7, file = "maize7.csv", row.names = TRUE)
+
+maize8 <- subset(ascend_maize, Chromosome == 8)
+write.csv(maize8, file = "maize8.csv", row.names = TRUE)
+
+maize9 <- subset(ascend_maize, Chromosome == 9)
+write.csv(maize9, file = "maize9.csv", row.names = TRUE)
+
+maize10 <- subset(ascend_maize, Chromosome == 10)
+write.csv(maize10, file = "maize10.csv", row.names = TRUE)
+
+
+# descending position order
+desecend_maize <- arrange(maize_combine, desc(Position))
+desecend_maize[desecend_maize == "?/?"] <- "-/-"
+
+# Filter by chromosome, descending position order
+
+dmaize1 <- subset(desecend_maize,  Chromosome == 1)
+write.csv(dmaize1, file = "dmaize1.csv", row.names = TRUE)
+
+dmaize2 <- subset(desecend_maize,  Chromosome == 2)
+write.csv(dmaize2, file = "dmaize2.csv", row.names = TRUE)
+
+dmaize3 <- subset(desecend_maize,  Chromosome == 3)
+write.csv(dmaize3, file = "dmaize3.csv", row.names = TRUE)
+
+dmaize4 <- subset(desecend_maize,  Chromosome == 4)
+write.csv(dmaize4, file = "dmaize4.csv", row.names = TRUE)
+
+dmaize5 <- subset(desecend_maize,  Chromosome == 5)
+write.csv(dmaize5, file = "dmaize5.csv", row.names = TRUE)
+
+dmaize6 <- subset(desecend_maize,  Chromosome == 6)
+write.csv(dmaize6, file = "dmaize6.csv", row.names = TRUE)
+
+dmaize7 <- subset(desecend_maize,  Chromosome == 7)
+write.csv(dmaize7, file = "dmaize7.csv", row.names = TRUE)
+
+dmaize8 <- subset(desecend_maize,  Chromosome == 8)
+write.csv(dmaize8, file = "dmaize8.csv", row.names = TRUE)
+
+dmaize9 <- subset(desecend_maize,  Chromosome == 9)
+write.csv(dmaize9, file = "dmaize9.csv", row.names = TRUE)
+
+dmaize10 <- subset(desecend_maize,  Chromosome == 10)
+write.csv(dmaize10, file = "dmaize10.csv", row.names = TRUE)
+
+
+```
+
+
+
+# Create 10 files for Teosinte data
+```{r}
+# ascending position order
+ascend_teos <- arrange(teos_combine, Position)
+
+# Filter by chromosome, ascending position order 
+teos1 <- subset(ascend_teos, Chromosome == 1)
+write.csv(teos1, file = "teos1.csv", row.names = TRUE)
+
+teos2 <- subset(ascend_teos, Chromosome == 2)
+write.csv(teos2, file = "teos2.csv", row.names = TRUE)
+
+teos3 <- subset(ascend_teos, Chromosome == 3)
+write.csv(teos3, file = "teos3.csv", row.names = TRUE)
+
+teos4 <- subset(ascend_teos, Chromosome == 4)
+write.csv(teos4, file = "teos4.csv", row.names = TRUE)
+
+teos5 <- subset(ascend_teos, Chromosome == 5)
+write.csv(teos5, file = "teos5.csv", row.names = TRUE)
+
+teos6 <- subset(ascend_teos, Chromosome == 6)
+write.csv(teos6, file = "teos6.csv", row.names = TRUE)
+
+teos7 <- subset(ascend_teos, Chromosome == 7)
+write.csv(teos7, file = "teos7.csv", row.names = TRUE)
+
+teos8 <- subset(ascend_teos, Chromosome == 8)
+write.csv(teos8, file = "teos8.csv", row.names = TRUE)
+
+teos9 <- subset(ascend_teos, Chromosome == 9)
+write.csv(teos9, file = "teos9.csv", row.names = TRUE)
+
+teos10 <- subset(ascend_teos, Chromosome == 10)
+write.csv(teos10, file = "teos10.csv", row.names = TRUE)
+
+
+# descending position order
+desecend_teos <- arrange(teos_combine, desc(Position))
+desecend_teos[desecend_teos == "?/?"] <- "-/-"
+
+# Filter by chromosome, descending position order
+
+dteos1 <- subset(desecend_teos,  Chromosome == 1)
+write.csv(dteos1, file = "dteos1.csv", row.names = TRUE)
+
+dteos2 <- subset(desecend_teos,  Chromosome == 2)
+write.csv(dteos2, file = "dteos2.csv", row.names = TRUE)
+
+dteos3 <- subset(desecend_teos,  Chromosome == 3)
+write.csv(dteos3, file = "dteos3.csv", row.names = TRUE)
+
+dteos4 <- subset(desecend_teos,  Chromosome == 4)
+write.csv(dteos4, file = "dteos4.csv", row.names = TRUE)
+
+dteos5 <- subset(desecend_teos,  Chromosome == 5)
+write.csv(dteos5, file = "dteos5.csv", row.names = TRUE)
+
+dteos6 <- subset(desecend_teos,  Chromosome == 6)
+write.csv(dteos6, file = "dteos6.csv", row.names = TRUE)
+
+dteos7 <- subset(desecend_teos,  Chromosome == 7)
+write.csv(dteos7, file = "dteos7.csv", row.names = TRUE)
+
+dteos8 <- subset(desecend_teos,  Chromosome == 8)
+write.csv(dteos8, file = "dteos8.csv", row.names = TRUE)
+
+dteos9 <- subset(desecend_teos,  Chromosome == 9)
+write.csv(dteos9, file = "dteos9.csv", row.names = TRUE)
+
+dteos10 <- subset(desecend_teos,  Chromosome == 10)
+write.csv(dteos10, file = "dteos10.csv", row.names = TRUE)
+
+
+```
+
+
+
+
+# Visualization
+```{r}
+# Change chromosome number to factor for layout
+maize_combine$Chromosome <- as.factor(maize_combine$Chromosome)
+
+#SNPS per chromosome 
+maize_snps_plot <- ggplot(maize_combine, aes(x= Chromosome)) +
+  geom_bar(fill = "red") +
+  labs(title = "Maize SNPs per Chromosome", x = "Chromosome", y = "SNPs")
+
+maize_snps_plot
+```
+```{r}
+# Change chromosome number to factor for layout
+
+# Teosinte SNPS per chromosome 
+teos_snps_plot <- ggplot(teos_combine, aes(x= Chromosome)) +
+  geom_bar(fill = "lightblue") +
+  labs(title = "Teosinte SNPs per Chromosome", x = "Chromosome", y = "SNPs")
+
+teos_snps_plot
+
+
+```
+## SNP visualization
+As the chromosome number increases, the number of SNPS per chromosome generally decreases. Chromosome 1 has the most about of SNPS for both the maize and teosinte. Chromosome 10 has the least number of SNPS out of all the chromosomes for both maize and teosinte. The SNP data on each chromosome is the same for maize and teosinte.
+
+```{r}
+# Missing data and Heterozygosity
+## Maize data
+homo_snps <- c("\\A/\\A", "\\C/\\C", "\\G/\\G", "\\T/\\T")
+counts <- table(unlist(lapply(homo_snps, grepl, x = unlist(maize_combine))))
+m_homozygotes <- counts[2]
+vm_homozygotes <- as.vector(m_homozygotes)
+total_snps <- 983*1576
+m_heterozygotes <- total_snps - vm_homozygotes
+
+
+## Teosinte data
+homo_snps2 <- c("\\A/\\A", "\\C/\\C", "\\G/\\G", "\\T/\\T")
+counts <- table(unlist(lapply(homo_snps2, grepl, x = unlist(teos_combine))))
+t_homozygotes <- counts[2]
+vt_homozygotes <- as.vector(t_homozygotes)
+t_heterozygotes <- total_snps - vt_homozygotes
+
+## Missing data
+missing_snp<- length(grep("\\?/\\?", unlist(maize_combine)))
+
+missing_snp2<- length(grep("\\?/\\?", unlist(teos_combine)))
+
+maize_dataframe <- data.frame(Homozygous = vm_homozygotes, Heterozygous = m_heterozygotes, Missing = missing_snp)
+maize_long <- gather(maize_dataframe, key = "variable", value = "value")
+
+teos_dataframe <- data.frame(Homozygous = vt_homozygotes, Heterozygous = t_heterozygotes, Missing = missing_snp2)
+teos_long <- gather(teos_dataframe, key = "variable", value = "value")
+
+
+## Maize Plot
+maize_snp_plot <- ggplot(maize_long, aes(x = variable, y = value)) +
+    geom_bar(stat = "identity", fill = "red") + 
+    labs(x = "Type", y = "Number of SNPS", fill = "Legend") +
+    ggtitle("Maize SNP Information")
+
+maize_snp_plot
+
+## Teosinte Plot
+teos_snp_plot <- ggplot(teos_long, aes(x = variable, y = value)) +
+    geom_bar(stat = "identity", fill = "lightblue") +  
+    labs(x = "Type", y = "Number of SNPS", fill = "Legend") +
+    ggtitle("Teosinte SNP Information")
+
+teos_snp_plot
+
+```
+
+# My Visualization
+## Number of Maize samples vs Teosinte samples
+```{r}
+maize_samples <-  ncol(maize_combine) - 3
+
+teos_samples <-  ncol(teos_combine) - 3
+
+samples_df <- data.frame(Maize_Samples = maize_samples, Teosinte_Samples = teos_samples)
+samples_long <- gather(samples_df, key = "Sample", value = "Count")
+
+samples_plot <- ggplot(samples_long, aes(x = Sample, y = Count)) +
+    geom_bar(stat = "identity", fill = "purple") +  
+    labs(x = "Sample Type", y = "Number of Samples", fill = "Legend") +
+    ggtitle("Maize Samples vs Teosinte Samples")
+
+samples_plot
+    
+```
+
