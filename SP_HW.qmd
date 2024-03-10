@@ -34,16 +34,16 @@ knitr::opts_chunk$set(echo       = TRUE,
 
 
 ```{r}
-# set path
-path_main <- "/Users/sarahphelps/desktop/BCB546/BCB546/"
+fang_file <- paste0(getwd(), "/fang_et_al_genotypes.txt")
+snp_file <- paste0(getwd(), "/snp_position.txt")
 
 # load libraries
 library(tidyverse)
 
 # Read in data files
-fang_data <- read.table("fang_et_al_genotypes.txt", header = T, sep = "\t")
+fang_data <- read.table(fang_file, header = T, sep = "\t")
 
-snp_data <- read.table("snp_position.txt", header = T, sep = "\t")
+snp_data <- read.table(snp_file, header = T, sep = "\t")
 
 ```
 
