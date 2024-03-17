@@ -1,0 +1,71 @@
+---
+title: "Greene_Review"
+output: html_document
+date: "2024-03-15"
+---
+
+# Review
+
+## Loading Libraries
+
+### Your code worked well. I think you can combine the read.table with the first code you used so you don't have to run two separate codes:
+
+```{r}
+fang_data <- read.table("./fang_et_al_genotypes.txt", header = T, sep = "\t")
+snp_data <- read.table("./snp_position.txt", header = T, sep = "\t")
+```
+
+### Other than that I think this section is good.
+
+## Data Inspection
+
+### I have no comment on this section. All the codes worked well.
+
+## Data Processing of Fang Data
+
+### Codes ran fine. I noticed the transposed data is now as a matrix, which might be problematic moving forward if you make edits. I used the same code as you except I specified I wanted the data as a data frame:
+
+```{r}
+trans_maize <- data.frame(t(clean_maize))
+# You would have to do the same for teosinte data
+```
+
+## Processing SNP Dataset
+
+### Codes ran well again. I wasn't aware of the `cbind` function, but it worked well. I used the `inner.join` function and was able to specify the column I wanted to match, which would then remove your need to clean the maize and teosinte data:
+
+```{r}
+maize_combine <- inner_join(snp_subset, trans_maize, by = "SNP_ID")
+```
+
+### Although, I had to change column names to "SNP_ID" in order to do that so your code is probably easier.
+
+## Creating Maize and Teosinte Data Files
+
+### Before you sort your data by position, you need to assign your position column `as.numeric` otherwise your data will be sorted by character like it is in you code. Additionally, I was under the impression we needed to replace the "?/?" with a single "?". You can do this in a single code like this:
+
+```{r}
+ascend_maize <- maize_combine %>% 
+  mutate_all(~str_replace_all(., "\\?/\\?", "?")) %>% 
+  mutate(Position = as.numeric(Position)) %>% 
+  arrange(Position)
+# It comes up with an error that NAs are introduced in SNPs that don't have a position, but the code still works at sorting and replacing
+# You can repeat this for descending values and teosinte data by just replacing a few things
+
+```
+
+### Instead of using 40 individual codes to create your data files, you can use one code per condition for 4 total codes by looping your code. Here is an example for the maize ascending data"
+
+```{r}
+for (i in 1:10) {
+  maize <- ascend_maize %>% filter(Chromosome == i) 
+  assign(paste0("maize", i), maize)
+  file_path <- file.path('./R_Assignment', paste0("maize", i, ".csv"))
+  write.csv(maize, file = file_path, row.names = FALSE)
+}
+# You might have change the output location, but this will work for ascending/descending, maize/teosinte data just by replacing some of the code
+```
+
+## Visualization
+
+### Plots looked good. Only thing I could think of is to order the chromosome #s on the X-axis by numerical value so that 10 is after 9 and not after 1.
