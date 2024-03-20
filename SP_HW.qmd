@@ -70,7 +70,7 @@ fang_head
 fang_rows
 fang_size 
 
-snp_head
+#snp_head its takes up too much space but i ran it to see column names and format
 snp_rows
 snp_size 
 ```
@@ -87,7 +87,7 @@ maize_subset <- subset(fang_data, Group %in% c("ZMMIL", "ZMMLR", "ZMMMR"))
 # get rid of column 1 and 2
 clean_maize <- select(maize_subset, abph1.20:zmm3.4)
 
-trans_maize <- t(clean_maize)
+trans_maize <- data.frame(t(clean_maize))
 
 
 # Processing Teosinte
@@ -98,7 +98,7 @@ teos_subset<- subset(fang_data, Group %in% c("ZMPBA", "ZMPIL", "ZMPJA"))
 # get rid of column 1 and 2
 clean_teos <- select(teos_subset, abph1.20:zmm3.4)
 
-trans_teos <- t(clean_teos)
+trans_teos <- data.frame(t(clean_teos))
 
 ```
 
@@ -119,76 +119,29 @@ teos_combine <- cbind(snp_subset, trans_teos)
 # Create 10 files for Maize data
 ```{r}
 # ascending position order
+maize_combine <- maize_combine %>% mutate(Position = as.numeric(Position))
 ascend_maize <- arrange(maize_combine, Position)
 
 # Filter by chromosome, ascending position order 
-maize1 <- subset(ascend_maize, Chromosome == 1)
-write.csv(maize1, file = "maize1.csv", row.names = TRUE)
 
-maize2 <- subset(ascend_maize, Chromosome == 2)
-write.csv(maize2, file = "maize2.csv", row.names = TRUE)
-
-maize3 <- subset(ascend_maize, Chromosome == 3)
-write.csv(maize3, file = "maize3.csv", row.names = TRUE)
-
-maize4 <- subset(ascend_maize, Chromosome == 4)
-write.csv(maize4, file = "maize4.csv", row.names = TRUE)
-
-maize5 <- subset(ascend_maize, Chromosome == 5)
-write.csv(maize5, file = "maize5.csv", row.names = TRUE)
-
-maize6 <- subset(ascend_maize, Chromosome == 6)
-write.csv(maize6, file = "maize6.csv", row.names = TRUE)
-
-maize7 <- subset(ascend_maize, Chromosome == 7)
-write.csv(maize7, file = "maize7.csv", row.names = TRUE)
-
-maize8 <- subset(ascend_maize, Chromosome == 8)
-write.csv(maize8, file = "maize8.csv", row.names = TRUE)
-
-maize9 <- subset(ascend_maize, Chromosome == 9)
-write.csv(maize9, file = "maize9.csv", row.names = TRUE)
-
-maize10 <- subset(ascend_maize, Chromosome == 10)
-write.csv(maize10, file = "maize10.csv", row.names = TRUE)
+for (i in 1:10) {
+  maize <- ascend_maize %>% filter(Chromosome == i) 
+  file_name <- paste0("maize", i)  
+  write.csv(maize, paste0(file_name, ".csv"), row.names = FALSE)
+}
 
 
 # descending position order
-desecend_maize <- arrange(maize_combine, desc(Position))
-desecend_maize[desecend_maize == "?/?"] <- "-/-"
+descend_maize <- arrange(maize_combine, desc(Position))
+descend_maize[descend_maize == "?/?"] <- "-/-"
 
 # Filter by chromosome, descending position order
 
-dmaize1 <- subset(desecend_maize,  Chromosome == 1)
-write.csv(dmaize1, file = "dmaize1.csv", row.names = TRUE)
-
-dmaize2 <- subset(desecend_maize,  Chromosome == 2)
-write.csv(dmaize2, file = "dmaize2.csv", row.names = TRUE)
-
-dmaize3 <- subset(desecend_maize,  Chromosome == 3)
-write.csv(dmaize3, file = "dmaize3.csv", row.names = TRUE)
-
-dmaize4 <- subset(desecend_maize,  Chromosome == 4)
-write.csv(dmaize4, file = "dmaize4.csv", row.names = TRUE)
-
-dmaize5 <- subset(desecend_maize,  Chromosome == 5)
-write.csv(dmaize5, file = "dmaize5.csv", row.names = TRUE)
-
-dmaize6 <- subset(desecend_maize,  Chromosome == 6)
-write.csv(dmaize6, file = "dmaize6.csv", row.names = TRUE)
-
-dmaize7 <- subset(desecend_maize,  Chromosome == 7)
-write.csv(dmaize7, file = "dmaize7.csv", row.names = TRUE)
-
-dmaize8 <- subset(desecend_maize,  Chromosome == 8)
-write.csv(dmaize8, file = "dmaize8.csv", row.names = TRUE)
-
-dmaize9 <- subset(desecend_maize,  Chromosome == 9)
-write.csv(dmaize9, file = "dmaize9.csv", row.names = TRUE)
-
-dmaize10 <- subset(desecend_maize,  Chromosome == 10)
-write.csv(dmaize10, file = "dmaize10.csv", row.names = TRUE)
-
+for (i in 1:10) {
+  dmaize <- descend_maize %>% filter(Chromosome == i) 
+  file_name <- paste0("dmaize", i)  
+  write.csv(dmaize, paste0(file_name, ".csv"), row.names = FALSE)
+}
 
 ```
 
@@ -197,75 +150,27 @@ write.csv(dmaize10, file = "dmaize10.csv", row.names = TRUE)
 # Create 10 files for Teosinte data
 ```{r}
 # ascending position order
+teos_combine <- teos_combine %>% mutate(Position = as.numeric(Position))
 ascend_teos <- arrange(teos_combine, Position)
 
 # Filter by chromosome, ascending position order 
-teos1 <- subset(ascend_teos, Chromosome == 1)
-write.csv(teos1, file = "teos1.csv", row.names = TRUE)
-
-teos2 <- subset(ascend_teos, Chromosome == 2)
-write.csv(teos2, file = "teos2.csv", row.names = TRUE)
-
-teos3 <- subset(ascend_teos, Chromosome == 3)
-write.csv(teos3, file = "teos3.csv", row.names = TRUE)
-
-teos4 <- subset(ascend_teos, Chromosome == 4)
-write.csv(teos4, file = "teos4.csv", row.names = TRUE)
-
-teos5 <- subset(ascend_teos, Chromosome == 5)
-write.csv(teos5, file = "teos5.csv", row.names = TRUE)
-
-teos6 <- subset(ascend_teos, Chromosome == 6)
-write.csv(teos6, file = "teos6.csv", row.names = TRUE)
-
-teos7 <- subset(ascend_teos, Chromosome == 7)
-write.csv(teos7, file = "teos7.csv", row.names = TRUE)
-
-teos8 <- subset(ascend_teos, Chromosome == 8)
-write.csv(teos8, file = "teos8.csv", row.names = TRUE)
-
-teos9 <- subset(ascend_teos, Chromosome == 9)
-write.csv(teos9, file = "teos9.csv", row.names = TRUE)
-
-teos10 <- subset(ascend_teos, Chromosome == 10)
-write.csv(teos10, file = "teos10.csv", row.names = TRUE)
-
+for (i in 1:10) {
+  teosinte <- ascend_teos %>% filter(Chromosome == i) 
+  file_name <- paste0("teos", i)  
+  write.csv(teosinte, paste0(file_name, ".csv"), row.names = FALSE)
+}
 
 # descending position order
-desecend_teos <- arrange(teos_combine, desc(Position))
-desecend_teos[desecend_teos == "?/?"] <- "-/-"
+descend_teos <- arrange(teos_combine, desc(Position))
+descend_teos[descend_teos == "?/?"] <- "-/-"
 
 # Filter by chromosome, descending position order
 
-dteos1 <- subset(desecend_teos,  Chromosome == 1)
-write.csv(dteos1, file = "dteos1.csv", row.names = TRUE)
-
-dteos2 <- subset(desecend_teos,  Chromosome == 2)
-write.csv(dteos2, file = "dteos2.csv", row.names = TRUE)
-
-dteos3 <- subset(desecend_teos,  Chromosome == 3)
-write.csv(dteos3, file = "dteos3.csv", row.names = TRUE)
-
-dteos4 <- subset(desecend_teos,  Chromosome == 4)
-write.csv(dteos4, file = "dteos4.csv", row.names = TRUE)
-
-dteos5 <- subset(desecend_teos,  Chromosome == 5)
-write.csv(dteos5, file = "dteos5.csv", row.names = TRUE)
-
-dteos6 <- subset(desecend_teos,  Chromosome == 6)
-write.csv(dteos6, file = "dteos6.csv", row.names = TRUE)
-
-dteos7 <- subset(desecend_teos,  Chromosome == 7)
-write.csv(dteos7, file = "dteos7.csv", row.names = TRUE)
-
-dteos8 <- subset(desecend_teos,  Chromosome == 8)
-write.csv(dteos8, file = "dteos8.csv", row.names = TRUE)
-
-dteos9 <- subset(desecend_teos,  Chromosome == 9)
-write.csv(dteos9, file = "dteos9.csv", row.names = TRUE)
-
-dteos10 <- subset(desecend_teos,  Chromosome == 10)
-write.csv(dteos10, file = "dteos10.csv", row.names = TRUE)
+for (i in 1:10) {
+  dteosinte <- ascend_teos %>% filter(Chromosome == i) 
+  file_name <- paste0("dteos", i)  
+  write.csv(teosinte, paste0(file_name, ".csv"), row.names = FALSE)
+}
 
 
 ```
