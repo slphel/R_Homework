@@ -13,6 +13,8 @@ The 10 files named dmaize1.csv - dmaize10.csv are seperate files from the maize 
 
 10 files named dteos1.csv - dteos10.csv are seperate files from the teosinte data for each chromosome in descending position order. 
 
-Changes to the "SP_HW" quarto document were made from Russell Greene's review. With his comments, I was able to create a loop to more efficently create the 40 data files. 
+Changes to the "SP_HW" quarto document were made from Russell Greene's review. With his comments, I was able to create a loop to more efficently create the 40 data files. His comments are included in this repository.
 
 Visualization plots are included in the html document. These vizualizations include number of SNPS per chromosome, SNP types both teosinte and maize data files, and a comparison of the total number of teosinte and maize samples. 
+
+Finally, I've included the 2 review files I created for 2 other students.
